@@ -16,5 +16,3 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin
     lock_passwd: false
-    ssh_authorized_keys:
-      - ssh-rsa AAAAHHHHHH
