@@ -6,13 +6,30 @@ groups:
   - ubuntu: [root,sys]
   - tevvo
 
+# Set ssh to enable password login
+ssh_pwauth: True
+
 # Add users to the system. Users are added after groups are added.
 users:
   - default
   - name: myuser
     gecos: myuser
+    passwd: $6$pSoQFAQSSuAFHD2v$GK2gWuwJLGGZh1S5JpVfvgMIMPoJWU7nF0pJ9.1L0CI54mu5Df4bYHKZVeGibr7WIhvBz8LIZqO6OcWkoQ1x9.
     shell: /bin/bash
     primary_group: tevvo
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin
     lock_passwd: false
+    ssh_authorized_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCuIO4OxqOpq6M/3CO9+ZKIZUhK/G7vOr1DcISWedxatztWIg4pLYAEcCwFFZ8RUQOMAMVJTo7ls484QeUpU7NNX4Oq38c0QVzRJg/+AoAB+uZLJJ+mq9+78XCRjGFavgzGjQgd+SKvmxJUJnilGbPPtm6FrAwfKMlOXoI6FhIXOKnjoQj/JB8sOrCgcaE8uTZrX9zbcJAG1vGLuKnRlyv8UJfHpnsngHDQaR6Y15gl6VPSIgR1DI7YfTFvOtXtK1zRxn594I6YZylFst7B6Ng3hL5fyQxZXCqgX3o39BWFC7n+Sv4WdWbGXIKHpdwf3QnCp88dlCY19q+BQ1pEffcJavpsNVgWYTJ31szUFhZv9uFSbWrlIQuAKVhohdp1g55OOFlicYh+bevWJ7UaluLuY4RCdtS81Ve0qZ5Gf1MKUkbDzfIB0U7zejfborLqc7lBUjVqHx/UUBAmiPpB39HhtXWYwOpqpH3/7OuGatPvRNnoMDhheFZU/joN6ejXMzM= louis tan@Laptop-Louis
+
+write_files:
+  - path: /tmp/setup_script.sh
+    content: |
+      #!/bin/bash
+      sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+      sudo service ssh restart
+
+runcmd:
+  - chmod +x /tmp/setup_script.sh
+  - /tmp/setup_script.sh
